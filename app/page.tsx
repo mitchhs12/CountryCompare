@@ -1,12 +1,8 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { countries } from "@/utils/data/Countries";
 
 export default function Home() {
-  console.log("cwd", process.cwd());
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <h1 className="flex pt-12 text-2xl">Countries</h1>

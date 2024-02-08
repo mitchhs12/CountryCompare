@@ -33,7 +33,7 @@ export const countries: string[] = [
   "ecuador",
   "egypt",
   "el-salvador",
-  ",equatorial-guinea",
+  "equatorial-guinea",
   "estonia",
   "eswatini",
   "ethiopia",
