@@ -5,9 +5,9 @@ import { countries } from "@/utils/data/Countries";
 import { formatCountryName } from "@/utils/helpers";
 
 export default function Grid() {
-  const url = process.env.VERCEL_IMAGE_PREFIX_URL;
-  const compressedUrl = process.env.VERCEL_IMAGE_PREFIX_URL_COMRPESSED;
-  console.log("CURRENT URL", url);
+  //const url = process.env.VERCEL_IMAGE_PREFIX_URL;
+  const compressedUrl = process.env.COMPRESSED_IMAGES_BLOB_STORE;
+
   return (
     <div className="flex-col justify-start">
       <GridController />

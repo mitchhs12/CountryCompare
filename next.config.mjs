@@ -10,9 +10,9 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "5b9iwcfsiut8ybgm.public.blob.vercel-storage.com",
+        hostname: "8bizuacxodgnvxgb.public.blob.vercel-storage.com",
         port: "",
-        pathname: "/country-icons-compressed/**",
+        pathname: "/country-compare-images-compressed/**",
       },
     ],
   },
