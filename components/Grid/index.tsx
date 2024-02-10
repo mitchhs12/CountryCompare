@@ -16,7 +16,7 @@ export default function Grid() {
           <Link href={`/${country}`} key={country}>
             <div className="relative group">
               <Image src={`${compressedUrl}${country}.webp`} alt={country} width={200} height={200} />
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 transition-opacity duration-300 ease-in-out group-hover:bg-opacity-10">
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 transition-opacity duration-300 ease-in-out group-hover:bg-opacity-30">
                 <span className="text-white text-center text-lg font-semibold">{formatCountryName(country)}</span>
               </div>
               {/* Numbering */}
