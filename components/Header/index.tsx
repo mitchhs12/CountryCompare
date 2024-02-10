@@ -2,8 +2,6 @@
 
 import { usePathname } from "next/navigation";
 
-import HomeLink from "./HomeLink";
-
 export default function Header() {
   const pathname = usePathname();
 
@@ -14,8 +12,6 @@ export default function Header() {
           pathname === "/" ? "pl-2" : "ml-[48px] xl:ml-[176px]"
         } bg-white z-[802]`}
       >
-        <HomeLink />
-
         <nav className="flex justify-evenly items-center gap-8 h-full text-[.8rem] font-semibold"></nav>
 
         {/* Bottom Line */}
