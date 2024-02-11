@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import Providers from "./providers";
+import { Providers } from "./providers";
 import Header from "@/components/Header";
 import "./globals.css";
 
@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-stone-100 dark:bg-stone-900`}>
+      <body className={inter.className}>
         <Providers>
           <Header/>
           {children}

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import ThemeSwitcher from "@/components/ThemeSwitcher";
+import ThemeSwitch from "@/components/ThemeChanger";
 
 export default function Header() {
   const pathname = usePathname();
@@ -16,7 +16,7 @@ export default function Header() {
         Theme Switch
         <nav className="flex justify-evenly items-center gap-8 h-full text-[.8rem] font-semibold">
           TEST
-          <ThemeSwitcher />
+          <ThemeSwitch />
         </nav>
         {/* Bottom Line */}
         <div className="absolute bottom-0 left-0 right-0 divider" />

@@ -1,11 +1,9 @@
+// app/providers.jsx
+
 "use client";
 
 import { ThemeProvider } from "next-themes";
 
-export default function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      {children}
-    </ThemeProvider>
-  );
+export function Providers({ children }: any) {
+  return <ThemeProvider attribute="class">{children}</ThemeProvider>;
 }
