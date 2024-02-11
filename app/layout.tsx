@@ -1,24 +1,31 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import {Analytics} from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import Providers from "./providers";
+import Header from "@/components/Header";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Country Compare",
-  description: "A website dedicated to comparing country attributes.",
+  title: "Nomad Stats",
+  description: "A website dedicated to comparing attributes across countries for nomads.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className}`}>
+        <Providers>
+          <Header/>
+          {children}
+        </Providers>
+      </body>
       <Analytics />
       <SpeedInsights/>
     </html>
