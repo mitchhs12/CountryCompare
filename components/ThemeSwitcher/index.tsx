@@ -65,7 +65,7 @@ export function ThemeSwitch() {
 
   return (
     <div>
-      <MaterialUISwitch checked={isDarkMode} onChange={toggleTheme} />
+      <MaterialUISwitch defaultChecked={isDarkMode} checked={isDarkMode} onChange={toggleTheme} />
     </div>
   );
 }
