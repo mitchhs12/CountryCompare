@@ -5,7 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import Header from "@/components/Header";
 import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
-import {ThemeProvider} from "@/components/ThemeProvider";
+import {ContextProvider} from "@/components/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "Nomad Stats",
@@ -19,11 +19,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <body className={`${inter.className} bg-stone-100 dark:bg-stone-950 `}>
+        <ContextProvider attribute="class" defaultTheme="system" enableSystem>
           <Header/>
           {children}
-        </ThemeProvider>
+        </ContextProvider>
         <SpeedInsights/>
         <Analytics />
       </body>

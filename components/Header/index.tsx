@@ -13,9 +13,8 @@ export default function Header() {
           pathname === "/" ? "pl-2" : "ml-[48px] xl:ml-[176px]"
         } z-[802]`}
       >
-        Theme Switch
+        Logo Goes Here
         <nav className="flex justify-evenly items-center gap-8 h-full text-[.8rem] font-semibold">
-          TEST
           <ThemeSwitch />
         </nav>
         {/* Bottom Line */}
