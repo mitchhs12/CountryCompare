@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import ThemeSwitch from "@/components/ThemeChanger";
+import { ThemeSwitch } from "@/components/ThemeSwitcher";
 
 export default function Header() {
   const pathname = usePathname();
