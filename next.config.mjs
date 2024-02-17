@@ -4,9 +4,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "8bizuacxodgnvxgb.public.blob.vercel-storage.com",
+        hostname: "nomadstats.s3.amazonaws.com",
         port: "",
-        pathname: "/country-compare-images-compressed/**",
+        pathname: "/CompressedImages/**",
       },
     ],
   },
