@@ -2,18 +2,15 @@
 
 import { usePathname } from "next/navigation";
 import { ThemeSwitch } from "@/components/ThemeSwitcher";
+import Link from "next/link";
 
 export default function Header() {
   const pathname = usePathname();
 
   return (
     <>
-      <header
-        className={`relative flex justify-between items-center h-[64px] pr-4 ${
-          pathname === "/" ? "pl-2" : "ml-[48px] xl:ml-[176px]"
-        } z-[802]`}
-      >
-        Logo Goes Here
+      <header className={`relative flex justify-between items-center h-[64px] px-4 z-[1000]`}>
+        <Link href="/">Logo Placeholder</Link>
         <nav className="flex justify-evenly items-center gap-8 h-full text-[.8rem] font-semibold">
           <ThemeSwitch />
         </nav>

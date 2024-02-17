@@ -1,6 +1,6 @@
 // Utility function to format country names, with specific handling for certain words
 export function formatCountryName(country: string) {
-  const lowercaseWords = ["a", "the", "of"]; // Words to keep in lowercase unless they are the first word
+  const lowercaseWords = ["a", "the", "of", "and"]; // Words to keep in lowercase unless they are the first word
   return country
     .split("-")
     .map((word, index) => {

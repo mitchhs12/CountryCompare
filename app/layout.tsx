@@ -19,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} bg-stone-100 dark:bg-stone-950 `}>
+      <body className={`${inter.className} bg-stone-100 dark:bg-stone-950`}>
         <ContextProvider attribute="class" defaultTheme="system" enableSystem>
           <Header/>
           {children}
