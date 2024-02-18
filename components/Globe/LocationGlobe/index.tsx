@@ -15,7 +15,7 @@ export default function LocationGlobe() {
   const handleGlobeReady = () => {
     setIsLoading(false);
     const controls = globeEl.current.controls();
-    controls.autoRotate = true;
+    controls.autoRotate = false;
     controls.autoRotateSpeed = 1;
   };
 
@@ -39,7 +39,7 @@ export default function LocationGlobe() {
         animateIn={true}
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
         //bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
-        lineHoverPrecision={0}
+        //lineHoverPrecision={0}
         width={500}
         height={500}
         backgroundColor={hexToRGBA("#ffffff", 0)}
@@ -63,21 +63,21 @@ export default function LocationGlobe() {
             ? "rgba(70, 130, 180, 0.7)"
             : "rgba(0, 0, 0, 0.1)"
         }
-        polygonStrokeColor={(d: any) =>
-          d == hoverD
-            ? d.properties.ISO_A2 === isoCode
-              ? "rgba(39,174,96,0.9)"
-              : "rgba(255, 255, 255, 0.1)"
-            : d.properties.ISO_A2 === isoCode
-            ? "rgba(70, 130, 180, 0.9)"
-            : "rgba(0, 0, 0, 0.1)"
-        }
-        polygonLabel={({ properties }: any) => `
-          <b>${properties.ADMIN} (${properties.ISO_A2}):</b> <br />
-          Population: <i>${properties.POP_EST.toLocaleString()}</i>
-        `}
-        onPolygonHover={handlePolygonHover}
-        polygonsTransitionDuration={300}
+        // polygonStrokeColor={(d: any) =>
+        //   d == hoverD
+        //     ? d.properties.ISO_A2 === isoCode
+        //       ? "rgba(39,174,96,0.9)"
+        //       : "rgba(255, 255, 255, 0.1)"
+        //     : d.properties.ISO_A2 === isoCode
+        //     ? "rgba(70, 130, 180, 0.9)"
+        //     : "rgba(0, 0, 0, 0.1)"
+        // }
+        // polygonLabel={({ properties }: any) => `
+        //   <b>${properties.ADMIN} (${properties.ISO_A2}):</b> <br />
+        //   Population: <i>${properties.POP_EST.toLocaleString()}</i>
+        // `}
+        // onPolygonHover={handlePolygonHover}
+        //polygonsTransitionDuration={300}
       />
     </div>
   );
