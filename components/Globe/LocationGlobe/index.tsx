@@ -8,21 +8,21 @@ import { usePathname } from "next/navigation";
 
 export default function LocationGlobe() {
   const globeEl = useRef<any>(null);
-  const [hoverD, setHoverD] = useState(null);
+  // const [hoverD, setHoverD] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const countryId = usePathname().split("/")[1];
 
   const handleGlobeReady = () => {
     setIsLoading(false);
     const controls = globeEl.current.controls();
-    controls.autoRotate = false;
+    controls.autoRotate = true;
     controls.autoRotateSpeed = 1;
   };
 
   // Wrapper function to match expected signature
-  const handlePolygonHover = (polygon: any) => {
-    setHoverD(polygon);
-  };
+  // const handlePolygonHover = (polygon: any) => {
+  //   setHoverD(polygon);
+  // };
 
   const isoCode = countries[countryId as keyof typeof countries].isoCode;
 
@@ -46,22 +46,20 @@ export default function LocationGlobe() {
         polygonsData={countryData.features.filter((d) => d.properties.ISO_A2 !== "AQ")}
         polygonAltitude={({ properties }: any) => (properties.ISO_A2 === isoCode ? 0.15 : 0.01)}
         polygonCapColor={(d: any) =>
-          d == hoverD
-            ? d.properties.ISO_A2 === isoCode
-              ? "rgba(39, 174, 96, 0.7)"
-              : "rgba(255, 255, 255, 0.5)"
-            : d.properties.ISO_A2 === isoCode
-            ? "rgba(70, 130, 180, 0.7)"
-            : "rgba(255, 255, 255, 0.1)"
+          // d == hoverD
+          // ? d.properties.ISO_A2 === isoCode
+          //   ? "rgba(39, 174, 96, 0.7)"
+          //   : "rgba(255, 255, 255, 0.5)"
+          // :
+          d.properties.ISO_A2 === isoCode ? "rgba(70, 130, 180, 0.7)" : "rgba(255, 255, 255, 0.1)"
         }
         polygonSideColor={(d: any) =>
-          d == hoverD
-            ? d.properties.ISO_A2 === isoCode
-              ? "rgba(39, 174, 96, 0.7)"
-              : "rgba(0, 0, 0, 0.1)"
-            : d.properties.ISO_A2 === isoCode
-            ? "rgba(70, 130, 180, 0.7)"
-            : "rgba(0, 0, 0, 0.1)"
+          // d == hoverD
+          // ? d.properties.ISO_A2 === isoCode
+          //   ? "rgba(39, 174, 96, 0.7)"
+          //   : "rgba(0, 0, 0, 0.1)"
+          // :
+          d.properties.ISO_A2 === isoCode ? "rgba(70, 130, 180, 0.7)" : "rgba(0, 0, 0, 0.1)"
         }
         // polygonStrokeColor={(d: any) =>
         //   d == hoverD
