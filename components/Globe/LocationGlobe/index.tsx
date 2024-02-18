@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 export default function LocationGlobe() {
   const globeEl = useRef<any>(null);
-  // const [hoverD, setHoverD] = useState(null);
+  const [hoverD, setHoverD] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const countryId = usePathname().split("/")[1];
 
@@ -20,9 +20,19 @@ export default function LocationGlobe() {
   };
 
   // Wrapper function to match expected signature
-  // const handlePolygonHover = (polygon: any) => {
-  //   setHoverD(polygon);
-  // };
+  const handlePolygonHover = (polygon: any) => {
+    setHoverD(polygon);
+  };
+
+  const handleMouseEnter = () => {
+    const controls = globeEl.current.controls();
+    controls.autoRotate = false;
+  };
+
+  const handleMouseLeave = () => {
+    const controls = globeEl.current.controls();
+    controls.autoRotate = true;
+  };
 
   const isoCode = countries[countryId as keyof typeof countries].isoCode;
 
@@ -36,46 +46,51 @@ export default function LocationGlobe() {
       <Globe
         ref={globeEl}
         onGlobeReady={handleGlobeReady}
-        animateIn={false}
+        waitForGlobeReady={true}
+        animateIn={true}
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-        //bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+        bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
         //lineHoverPrecision={0}
         width={500}
         height={500}
         backgroundColor={hexToRGBA("#ffffff", 0)}
-        polygonsData={countryData.features.filter((d) => d.properties.ISO_A2 !== "AQ")}
+        polygonsData={countryData.features.filter(
+          (d) => d.properties.ISO_A2 !== "AQ" && d.properties.ISO_A2 === isoCode
+        )}
         polygonAltitude={({ properties }: any) => (properties.ISO_A2 === isoCode ? 0.15 : 0.01)}
         polygonCapColor={(d: any) =>
-          // d == hoverD
-          // ? d.properties.ISO_A2 === isoCode
-          //   ? "rgba(39, 174, 96, 0.7)"
-          //   : "rgba(255, 255, 255, 0.5)"
-          // :
-          d.properties.ISO_A2 === isoCode ? "rgba(70, 130, 180, 0.7)" : "rgba(255, 255, 255, 0.1)"
+          d == hoverD
+            ? d.properties.ISO_A2 === isoCode
+              ? "rgba(39, 174, 96, 0.7)"
+              : "rgba(255, 255, 255, 0.5)"
+            : d.properties.ISO_A2 === isoCode
+            ? "rgba(70, 130, 180, 0.7)"
+            : "rgba(255, 255, 255, 0.1)"
         }
         polygonSideColor={(d: any) =>
-          // d == hoverD
-          // ? d.properties.ISO_A2 === isoCode
-          //   ? "rgba(39, 174, 96, 0.7)"
-          //   : "rgba(0, 0, 0, 0.1)"
-          // :
-          d.properties.ISO_A2 === isoCode ? "rgba(70, 130, 180, 0.7)" : "rgba(0, 0, 0, 0.1)"
+          d == hoverD
+            ? d.properties.ISO_A2 === isoCode
+              ? "rgba(39, 174, 96, 0.7)"
+              : "rgba(0, 0, 0, 0.1)"
+            : d.properties.ISO_A2 === isoCode
+            ? "rgba(70, 130, 180, 0.7)"
+            : "rgba(0, 0, 0, 0.1)"
         }
-        // polygonStrokeColor={(d: any) =>
-        //   d == hoverD
-        //     ? d.properties.ISO_A2 === isoCode
-        //       ? "rgba(39,174,96,0.9)"
-        //       : "rgba(255, 255, 255, 0.1)"
-        //     : d.properties.ISO_A2 === isoCode
-        //     ? "rgba(70, 130, 180, 0.9)"
-        //     : "rgba(0, 0, 0, 0.1)"
-        // }
-        // polygonLabel={({ properties }: any) => `
-        //   <b>${properties.ADMIN} (${properties.ISO_A2}):</b> <br />
-        //   Population: <i>${properties.POP_EST.toLocaleString()}</i>
-        // `}
-        // onPolygonHover={handlePolygonHover}
-        //polygonsTransitionDuration={300}
+        polygonStrokeColor={(d: any) =>
+          d == hoverD
+            ? d.properties.ISO_A2 === isoCode
+              ? "rgba(39,174,96,0.9)"
+              : "rgba(255, 255, 255, 0.1)"
+            : d.properties.ISO_A2 === isoCode
+            ? "rgba(70, 130, 180, 0.9)"
+            : "rgba(0, 0, 0, 0.1)"
+        }
+        polygonLabel={({ properties }: any) => `
+          <b>${properties.ADMIN} (${properties.ISO_A2}):</b> <br />
+          Population: <i>${properties.POP_EST.toLocaleString()}</i>
+        `}
+        onPolygonHover={handlePolygonHover}
+        polygonsTransitionDuration={300}
       />
     </div>
   );
