@@ -20,6 +20,7 @@ export default function PopulationGlobe() {
   };
 
   const colorScale = d3.scaleSequentialSqrt(d3.interpolateYlOrRd).domain([0, maxVal]);
+
   return (
     <div>
       <Globe
