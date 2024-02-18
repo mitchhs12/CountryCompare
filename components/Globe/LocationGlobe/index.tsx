@@ -1,22 +1,63 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import countryData from "@/utils/data/countryData.json";
 import { hexToRGBA } from "@/utils/helpers";
 import Globe from "react-globe.gl";
 import Loading from "@/components/Loading";
 import { countries } from "@/utils/data/Countries";
 import { usePathname } from "next/navigation";
+import * as THREE from "three";
 
 export default function LocationGlobe() {
   const globeEl = useRef<any>(null);
+  const cloudsMeshRef = useRef<THREE.Mesh>();
+  const shouldRotateCloudsRef = useRef(true); // Ref to control clouds rotation
+
   const [hoverD, setHoverD] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const countryId = usePathname().split("/")[1];
+  const [theme, setTheme] = useState("light");
+
+  // Add clouds sphere
+  const CLOUDS_IMG_URL = "./clouds.png";
+  const CLOUDS_ALT = 0.004;
+  const CLOUDS_ROTATION_SPEED = -0.006; // deg/frame
+
+  useEffect(() => {
+    const updateTheme = () => {
+      const isDarkMode = document.documentElement.classList.contains("dark");
+      setTheme(isDarkMode ? "dark" : "light");
+    };
+
+    updateTheme();
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleGlobeReady = () => {
+    const globe = globeEl.current;
     setIsLoading(false);
-    const controls = globeEl.current.controls();
+    const controls = globe.controls();
     controls.autoRotate = true;
     controls.autoRotateSpeed = 1;
+
+    new THREE.TextureLoader().load(CLOUDS_IMG_URL, (cloudsTexture) => {
+      const clouds = new THREE.Mesh(
+        new THREE.SphereGeometry(globe.getGlobeRadius() * (1 + CLOUDS_ALT), 75, 75),
+        new THREE.MeshPhongMaterial({ map: cloudsTexture, transparent: true })
+      );
+      cloudsMeshRef.current = clouds;
+      globe.scene().add(clouds);
+
+      const rotateClouds = () => {
+        if (shouldRotateCloudsRef.current) {
+          clouds.rotation.y += (CLOUDS_ROTATION_SPEED * Math.PI) / 180;
+          requestAnimationFrame(rotateClouds);
+        }
+      };
+      rotateClouds();
+    });
   };
 
   // Wrapper function to match expected signature
@@ -24,20 +65,33 @@ export default function LocationGlobe() {
     setHoverD(polygon);
   };
 
-  const handleMouseEnter = () => {
+  const stopSpinning = () => {
     const controls = globeEl.current.controls();
     controls.autoRotate = false;
+    shouldRotateCloudsRef.current = false;
   };
 
-  const handleMouseLeave = () => {
+  const startSpinning = () => {
     const controls = globeEl.current.controls();
     controls.autoRotate = true;
+    shouldRotateCloudsRef.current = true;
+    if (cloudsMeshRef.current) {
+      const rotateClouds = () => {
+        if (shouldRotateCloudsRef.current && cloudsMeshRef.current) {
+          cloudsMeshRef.current.rotation.y += (CLOUDS_ROTATION_SPEED * Math.PI) / 180; // Ensure this matches the initial speed
+          requestAnimationFrame(rotateClouds);
+        }
+      };
+      rotateClouds();
+    }
   };
+
+  const globeImageUrl = theme === "dark" ? "./blue-marble.jpg" : "./day.jpg";
 
   const isoCode = countries[countryId as keyof typeof countries].isoCode;
 
   return (
-    <div className="relative w-[500px] h-[500px]">
+    <div className="relative w-[500px] h-[500px]" onMouseEnter={stopSpinning} onMouseLeave={startSpinning}>
       {isLoading && (
         <div className="absolute inset-0 flex justify-center items-center">
           <Loading size={100} />
@@ -48,9 +102,8 @@ export default function LocationGlobe() {
         onGlobeReady={handleGlobeReady}
         waitForGlobeReady={true}
         animateIn={true}
-        globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+        globeImageUrl={globeImageUrl} //"//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
         bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
-        //lineHoverPrecision={0}
         width={500}
         height={500}
         backgroundColor={hexToRGBA("#ffffff", 0)}
