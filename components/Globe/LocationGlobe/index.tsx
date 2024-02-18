@@ -36,7 +36,7 @@ export default function LocationGlobe() {
       <Globe
         ref={globeEl}
         onGlobeReady={handleGlobeReady}
-        animateIn={true}
+        animateIn={false}
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
         //bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
         //lineHoverPrecision={0}
