@@ -1,17 +1,6 @@
-export const countries = {
-  "albania": {"Overview":
-  ""},
-  "algeria":{
-    "Location": "Maghreb region of North Africa, Mediterranean Sea",
-    "Capital": "Algiers",
-    "Official Language": "Arabic (French commonly used)",
-    "Currency": "Algerian dinar (DZD)",
-    "Head of State": "President, elected for a five-year term",
-    "Government Type": "Parliament is bicameral, including People’s National Assembly and Council of the Nation",
-    "Economic Sector": "Reliant on hydrocarbons, Sonatrach plays a key role",
-    "Membership": "OPEC, IMF, World Bank"
-  }
-  ,
+export const countries: string[] = [
+  "albania",
+  "algeria",
   "angola",
   "argentina",
   "armenia",
@@ -161,4 +150,4 @@ export const countries = {
   "vietnam",
   "zambia",
   "zimbabwe",
-}
+];
