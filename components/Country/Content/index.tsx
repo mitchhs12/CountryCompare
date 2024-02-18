@@ -1,7 +1,7 @@
 "use client";
 import { usePathname } from "next/navigation";
 import { formatCountryName } from "@/utils/helpers";
-import Globe from "@/components/Globe";
+import LocationGlobe from "@/components/Globe/LocationGlobe";
 
 export default function Calculator() {
   const pathname = formatCountryName(usePathname().split("/")[1]);
@@ -9,7 +9,7 @@ export default function Calculator() {
   return (
     <div className="flex justify-between items-center gap-10">
       <h1 className="text-2xl">{pathname}</h1>
-      <Globe />
+      <LocationGlobe />
     </div>
   );
 }
