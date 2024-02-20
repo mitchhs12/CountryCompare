@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import allData from "@/utils/data/allData.json";
+import countryData from "@/utils/data/countryData.json";
 import { hexToRGBA } from "@/utils/helpers";
 import Globe from "react-globe.gl";
 import Loading from "@/components/Loading";
@@ -27,7 +27,6 @@ export default function LocationGlobe() {
   const CLOUDS_ROTATION_SPEED = -0.006; // deg/frame
 
   const globeImageUrl = theme === "dark" ? "./blue-marble.jpg" : "./day.jpg";
-  const typedAllData = allData as FeatureCollection;
   const isoCode = countries[countryId as keyof typeof countries].isoCode;
 
   useEffect(() => {
@@ -66,6 +65,7 @@ export default function LocationGlobe() {
 
     setIsLoading(false);
     const controls = globe.controls();
+    controls.enableZoom = false;
 
     new THREE.TextureLoader().load(CLOUDS_IMG_URL, (cloudsTexture) => {
       const clouds = new THREE.Mesh(
@@ -82,7 +82,7 @@ export default function LocationGlobe() {
         }
       };
 
-      const countryFeatures = typedAllData.features.filter((d: any) => d.properties.ISO_A2_EH === isoCode);
+      const countryFeatures = countryData.features.filter((d: any) => d.properties.ISO_A2_EH === isoCode);
 
       // Assuming countryFeatures is an array of GeoJSON Feature objects for the country
       const featureCollection = turf.featureCollection(countryFeatures);
@@ -147,8 +147,8 @@ export default function LocationGlobe() {
         width={500}
         height={500}
         backgroundColor={hexToRGBA("#ffffff", 0)}
-        polygonsData={typedAllData.features.filter((d: any) => d.properties.ISO_A2_EH === isoCode)}
-        polygonAltitude={({ properties }: any) => (properties.ISO_A2_EH === isoCode ? 0.15 : 0.01)}
+        polygonsData={countryData.features.filter((d: any) => d.properties.ISO_A2_EH === isoCode)}
+        polygonAltitude={({ properties }: any) => (properties.ISO_A2_EH === isoCode ? 0.13 : 0.01)}
         polygonCapColor={(d: any) =>
           d == hoverD
             ? d.properties.ISO_A2_EH === isoCode

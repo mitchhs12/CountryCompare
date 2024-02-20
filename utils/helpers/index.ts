@@ -1,5 +1,6 @@
 import { countries } from "@/utils/data/Countries";
 import allData from "@/utils/data/allData.json";
+import countryData from "@/utils/data/countryData.json";
 
 // Utility function to format country names, with specific handling for certain words
 export function formatCountryName(country: string) {
@@ -59,10 +60,10 @@ export const formatCountries = async () => {
 
 export const checkForAllCountries = () => {
   try {
-    for (const [countryName, countryData] of Object.entries(countries)) {
+    for (const [countryName, data] of Object.entries(countries)) {
       // Loop through the features array in country data and check if there is any ISO_A2 value that matches the country's ISO code
-      const countryExists = allData.features.some((feature) => {
-        return feature.properties.ISO_A2_EH === countryData.isoCode;
+      const countryExists = countryData.features.some((feature) => {
+        return feature.properties.ISO_A2_EH === data.isoCode;
       });
 
       if (!countryExists) {
