@@ -85,6 +85,7 @@ export default function LocationGlobe() {
       const countryFeatures = countryData.features.filter((d: any) => d.properties.ISO_A2_EH === isoCode);
 
       // Assuming countryFeatures is an array of GeoJSON Feature objects for the country
+      //@ts-ignore
       const featureCollection = turf.featureCollection(countryFeatures);
       const centroid = turf.centroid(featureCollection);
 
