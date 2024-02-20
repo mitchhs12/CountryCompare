@@ -31,7 +31,7 @@ export default function PopulationGlobe() {
         height={1000}
         polygonsData={countryData.features.filter((d) => d.properties.ISO_A2 !== "AQ")}
         polygonAltitude={(d) => (d === hoverD ? 0.12 : 0.01)}
-        polygonCapColor={(d) => (d === hoverD ? "steelblue" : colorScale(getVal(d)))}
+        polygonCapColor={(d) => (d === hoverD ? "yellow" : colorScale(getVal(d)))}
         polygonSideColor={() => "rgba(0, 100, 0, 0.15)"}
         polygonStrokeColor={() => "#111"}
         polygonLabel={({ properties }: any) => `

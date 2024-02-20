@@ -17,7 +17,7 @@ export default function Grid() {
             <div className="relative group">
               {/* Assuming the images are named after the country ISO codes in lowercase */}
               <Image
-                src={`${compressedUrl}${countryName.toLowerCase()}.webp`}
+                src={`${compressedUrl}${countryName.replaceAll("_", "-").toLowerCase()}.webp`}
                 alt={countryName}
                 width={200}
                 height={200}

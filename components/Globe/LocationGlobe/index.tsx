@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import countryData from "@/utils/data/countryData.json";
+import allData from "@/utils/data/allData.json";
 import { hexToRGBA } from "@/utils/helpers";
 import Globe from "react-globe.gl";
 import Loading from "@/components/Loading";
 import { countries } from "@/utils/data/Countries";
 import { usePathname } from "next/navigation";
+import { checkForAllCountries } from "@/utils/helpers";
 import * as THREE from "three";
 
 export default function LocationGlobe() {
@@ -21,6 +22,10 @@ export default function LocationGlobe() {
   const CLOUDS_IMG_URL = "./clouds.png";
   const CLOUDS_ALT = 0.004;
   const CLOUDS_ROTATION_SPEED = -0.006; // deg/frame
+
+  useEffect(() => {
+    checkForAllCountries();
+  }, []);
 
   useEffect(() => {
     const updateTheme = () => {
@@ -107,39 +112,39 @@ export default function LocationGlobe() {
         width={500}
         height={500}
         backgroundColor={hexToRGBA("#ffffff", 0)}
-        polygonsData={countryData.features.filter(
-          (d) => d.properties.ISO_A2 !== "AQ" && d.properties.ISO_A2 === isoCode
+        polygonsData={allData.features.filter(
+          (d) => d.properties.ISO_A2_EH === isoCode
         )}
-        polygonAltitude={({ properties }: any) => (properties.ISO_A2 === isoCode ? 0.15 : 0.01)}
+        polygonAltitude={({ properties }: any) => (properties.ISO_A2_EH === isoCode ? 0.15 : 0.01)}
         polygonCapColor={(d: any) =>
           d == hoverD
-            ? d.properties.ISO_A2 === isoCode
+            ? d.properties.ISO_A2_EH === isoCode
               ? "rgba(39, 174, 96, 0.7)"
-              : "rgba(255, 255, 255, 0.5)"
-            : d.properties.ISO_A2 === isoCode
+              : "rgba(255, 255, 0, 0.5)"
+            : d.properties.ISO_A2_EH === isoCode
             ? "rgba(70, 130, 180, 0.7)"
             : "rgba(255, 255, 255, 0.1)"
         }
         polygonSideColor={(d: any) =>
           d == hoverD
-            ? d.properties.ISO_A2 === isoCode
+            ? d.properties.ISO_A2_EH === isoCode
               ? "rgba(39, 174, 96, 0.7)"
               : "rgba(0, 0, 0, 0.1)"
-            : d.properties.ISO_A2 === isoCode
+            : d.properties.ISO_A2_EH === isoCode
             ? "rgba(70, 130, 180, 0.7)"
             : "rgba(0, 0, 0, 0.1)"
         }
         polygonStrokeColor={(d: any) =>
           d == hoverD
-            ? d.properties.ISO_A2 === isoCode
+            ? d.properties.ISO_A2_EH === isoCode
               ? "rgba(39,174,96,0.9)"
               : "rgba(255, 255, 255, 0.1)"
-            : d.properties.ISO_A2 === isoCode
+            : d.properties.ISO_A2_EH === isoCode
             ? "rgba(70, 130, 180, 0.9)"
             : "rgba(0, 0, 0, 0.1)"
         }
         polygonLabel={({ properties }: any) => `
-          <b>${properties.ADMIN} (${properties.ISO_A2}):</b> <br />
+          <b>${properties.ADMIN} (${properties.ISO_A2_EH}):</b> <br />
           Population: <i>${properties.POP_EST.toLocaleString()}</i>
         `}
         onPolygonHover={handlePolygonHover}

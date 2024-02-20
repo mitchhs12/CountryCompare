@@ -21,6 +21,14 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/ThemeSwitch", "**/*.json"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "components/ThemeSwitch",
+    "**/*.json",
+    "utils/editData.js"
+  ],
   "exclude": ["node_modules"]
 }
