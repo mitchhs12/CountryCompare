@@ -5,7 +5,6 @@ import Globe from "react-globe.gl";
 import Loading from "@/components/Loading";
 import { countries } from "@/utils/data/Countries";
 import { usePathname } from "next/navigation";
-import { FeatureCollection } from "geojson";
 import * as THREE from "three";
 import * as turf from "@turf/turf";
 
@@ -20,6 +19,7 @@ export default function LocationGlobe() {
   const countryId = usePathname().split("/")[1];
   const [theme, setTheme] = useState("light");
   const [isSpinning, setIsSpinning] = useState(false);
+  const [globeSize, setGlobeSize] = useState({ width: 250, height: 250 });
 
   // Add clouds sphere
   const CLOUDS_IMG_URL = "./clouds.png";
@@ -30,42 +30,50 @@ export default function LocationGlobe() {
   const isoCode = countries[countryId as keyof typeof countries].isoCode;
 
   useEffect(() => {
-    // Function to update the theme based on the "dark" class in the document element
-    const updateTheme = () => {
-      const isDarkMode = document.documentElement.classList.contains("dark");
-      setTheme(isDarkMode ? "dark" : "light");
-    };
+    if (typeof window !== "undefined") {
+      // Function to update the theme based on the "dark" class in the document element
+      const updateTheme = () => {
+        const isDarkMode = document.documentElement.classList.contains("dark");
+        setTheme(isDarkMode ? "dark" : "light");
+      };
 
-    // Function to handle visibility change
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        globeEl.current?.pauseAnimation(); // Pause the globe animation when the document is hidden
-      } else {
-        globeEl.current?.resumeAnimation(); // Resume the globe animation when the document becomes visible again
-      }
-    };
+      // Function to handle visibility change
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          globeEl.current?.pauseAnimation(); // Pause the globe animation when the document is hidden
+        } else {
+          globeEl.current?.resumeAnimation(); // Resume the globe animation when the document becomes visible again
+        }
+      };
 
-    // Initial theme update and setting up an observer for class changes on the document element
-    updateTheme();
-    const observer = new MutationObserver(updateTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+      const handleResize = () => {
+        // Example logic for dynamic resizing
+        const width = window.innerWidth < 768 ? 250 : window.innerWidth < 1024 ? 375 : 500;
+        const height = window.innerWidth < 768 ? 250 : window.innerWidth < 1024 ? 375 : 500;
+        setGlobeSize({ width, height });
+      };
 
-    // Adding event listener for visibility change
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+      // Initial theme update and setting up an observer for class changes on the document element
+      updateTheme();
+      const observer = new MutationObserver(updateTheme);
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
 
-    // Cleanup function to remove the event listener and disconnect the observer
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      observer.disconnect();
-    };
+      // Adding event listener for visibility change
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+      handleResize();
+      window.addEventListener("resize", handleResize);
+      // Cleanup function to remove the event listener and disconnect the observer
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        observer.disconnect();
+      };
+    }
   }, []); // Empty dependency array ensures this effect runs only once on mount
 
   const handleGlobeReady = () => {
     const globe = globeEl.current;
-
-    setIsLoading(false);
-    const controls = globe.controls();
-    controls.enableZoom = false;
 
     new THREE.TextureLoader().load(CLOUDS_IMG_URL, (cloudsTexture) => {
       const clouds = new THREE.Mesh(
@@ -74,6 +82,7 @@ export default function LocationGlobe() {
       );
       cloudsMeshRef.current = clouds;
       globe.scene().add(clouds);
+      globe.controls().enableZoom = false;
 
       const rotateClouds = () => {
         if (shouldRotateCloudsRef.current) {
@@ -91,8 +100,9 @@ export default function LocationGlobe() {
 
       const coordinates = centroid.geometry.coordinates;
 
-      globe.pointOfView({ lat: coordinates[1], lng: coordinates[0], altitude: 1.7 }, 1000);
+      globe.pointOfView({ lat: coordinates[1], lng: coordinates[0], altitude: 1.8 }, 1000);
       rotateClouds();
+      setIsLoading(false);
     });
   };
 
@@ -113,80 +123,71 @@ export default function LocationGlobe() {
   const stopSpinning = () => {
     const controls = globeEl.current.controls();
     controls.autoRotate = false;
-    //shouldRotateCloudsRef.current = false;
   };
 
   const startSpinning = () => {
     const controls = globeEl.current.controls();
     controls.autoRotate = true;
-    // shouldRotateCloudsRef.current = true;
-    // if (cloudsMeshRef.current) {
-    //   const rotateClouds = () => {
-    //     if (shouldRotateCloudsRef.current && cloudsMeshRef.current) {
-    //       cloudsMeshRef.current.rotation.y += (CLOUDS_ROTATION_SPEED * Math.PI) / 180; // Ensure this matches the initial speed
-    //       requestAnimationFrame(rotateClouds);
-    //     }
-    //   };
-    //   rotateClouds();
-    // }
   };
 
   return (
-    <div className="relative w-[500px] h-[500px]">
+    <div className="relative w-[250px] h-[250px] md:w-[375px] md:h-[375px] lg:w-[500px] lg:h-[500px]">
       {isLoading && (
         <div className="absolute inset-0 flex justify-center items-center">
           <Loading size={100} />
         </div>
       )}
-      <Globe
-        ref={globeEl}
-        onGlobeReady={handleGlobeReady}
-        waitForGlobeReady={true}
-        animateIn={false}
-        globeImageUrl={globeImageUrl} //"//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-        bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
-        width={500}
-        height={500}
-        backgroundColor={hexToRGBA("#ffffff", 0)}
-        polygonsData={countryData.features.filter((d: any) => d.properties.ISO_A2_EH === isoCode)}
-        polygonAltitude={({ properties }: any) => (properties.ISO_A2_EH === isoCode ? 0.13 : 0.01)}
-        polygonCapColor={(d: any) =>
-          d == hoverD
-            ? d.properties.ISO_A2_EH === isoCode
-              ? "rgba(39, 174, 96, 0.7)"
-              : "rgba(255, 255, 0, 0.5)"
-            : d.properties.ISO_A2_EH === isoCode
-            ? "rgba(255, 255, 0, 0.7)"
-            : "rgba(255, 255, 255, 0.1)"
-        }
-        polygonSideColor={(d: any) =>
-          d == hoverD
-            ? d.properties.ISO_A2_EH === isoCode
-              ? "rgba(39, 174, 96, 0.7)"
-              : "rgba(0, 0, 0, 0.1)"
-            : d.properties.ISO_A2_EH === isoCode
-            ? "rgba(255, 255, 0, 0.7)"
-            : "rgba(0, 0, 0, 0.1)"
-        }
-        polygonStrokeColor={(d: any) =>
-          d == hoverD
-            ? d.properties.ISO_A2_EH === isoCode
-              ? "rgba(39,174,96,0.9)"
+      <div className="flex justify-center items-center">
+        <Globe
+          ref={globeEl}
+          onGlobeReady={handleGlobeReady}
+          waitForGlobeReady={true}
+          animateIn={false}
+          globeImageUrl={globeImageUrl} //"//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+          bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+          width={globeSize.width}
+          height={globeSize.height}
+          backgroundColor={hexToRGBA("#ffffff", 0)}
+          polygonsData={countryData.features.filter((d: any) => d.properties.ISO_A2_EH === isoCode)}
+          polygonAltitude={({ properties }: any) => (properties.ISO_A2_EH === isoCode ? 0.13 : 0.01)}
+          polygonCapColor={(d: any) =>
+            d == hoverD
+              ? d.properties.ISO_A2_EH === isoCode
+                ? "rgba(39, 174, 96, 0.7)"
+                : "rgba(255, 255, 0, 0.5)"
+              : d.properties.ISO_A2_EH === isoCode
+              ? "rgba(255, 255, 0, 0.7)"
               : "rgba(255, 255, 255, 0.1)"
-            : d.properties.ISO_A2_EH === isoCode
-            ? "rgba(255, 255, 0, 0.9)"
-            : "rgba(0, 0, 0, 0.1)"
-        }
-        polygonLabel={({ properties }: any) => `
+          }
+          polygonSideColor={(d: any) =>
+            d == hoverD
+              ? d.properties.ISO_A2_EH === isoCode
+                ? "rgba(39, 174, 96, 0.7)"
+                : "rgba(0, 0, 0, 0.1)"
+              : d.properties.ISO_A2_EH === isoCode
+              ? "rgba(255, 255, 0, 0.7)"
+              : "rgba(0, 0, 0, 0.1)"
+          }
+          polygonStrokeColor={(d: any) =>
+            d == hoverD
+              ? d.properties.ISO_A2_EH === isoCode
+                ? "rgba(39,174,96,0.9)"
+                : "rgba(255, 255, 255, 0.1)"
+              : d.properties.ISO_A2_EH === isoCode
+              ? "rgba(255, 255, 0, 0.9)"
+              : "rgba(0, 0, 0, 0.1)"
+          }
+          polygonLabel={({ properties }: any) => `
           <b>${properties.ADMIN} (${properties.ISO_A2_EH}):</b> <br />
           Population: <i>${properties.POP_EST.toLocaleString()} (${properties.POP_YEAR})</i>
         `}
-        onPolygonHover={handlePolygonHover}
-        polygonsTransitionDuration={300}
-        onGlobeClick={() => {
-          startStopSpinning();
-        }}
-      />
+          onPolygonHover={handlePolygonHover}
+          polygonsTransitionDuration={300}
+          onGlobeClick={() => {
+            startStopSpinning();
+          }}
+        />
+      </div>
     </div>
   );
 }

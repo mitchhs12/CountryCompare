@@ -12,7 +12,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.9",
-    "@mui/material": "^5.15.9",
+    "@mui/material": "^5.15.10",
     "@turf/turf": "^6.5.0",
     "@types/geojson": "^7946.0.14",
     "@types/turf": "^3.5.32",
