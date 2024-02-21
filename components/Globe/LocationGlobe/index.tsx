@@ -7,17 +7,17 @@ import { countries } from "@/utils/data/Countries";
 import { usePathname } from "next/navigation";
 import * as THREE from "three";
 import * as turf from "@turf/turf";
+import { useTheme } from "next-themes";
 
 export default function LocationGlobe() {
   const globeEl = useRef<any>(null);
-
+  const { resolvedTheme } = useTheme();
   const cloudsMeshRef = useRef<THREE.Mesh>();
   const shouldRotateCloudsRef = useRef(true); // Ref to control clouds rotation
 
   const [hoverD, setHoverD] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const countryId = usePathname().split("/")[1];
-  const [theme, setTheme] = useState("light");
   const [isSpinning, setIsSpinning] = useState(false);
   const [globeSize, setGlobeSize] = useState({ width: 250, height: 250 });
 
@@ -26,51 +26,23 @@ export default function LocationGlobe() {
   const CLOUDS_ALT = 0.004;
   const CLOUDS_ROTATION_SPEED = -0.006; // deg/frame
 
-  const globeImageUrl = theme === "dark" ? "./blue-marble.jpg" : "./day.jpg";
+  const globeImageUrl = resolvedTheme === "dark" ? "./blue-marble.jpg" : "./day.jpg";
   const isoCode = countries[countryId as keyof typeof countries].isoCode;
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Function to update the theme based on the "dark" class in the document element
-      const updateTheme = () => {
-        const isDarkMode = document.documentElement.classList.contains("dark");
-        setTheme(isDarkMode ? "dark" : "light");
-      };
+    const handleResize = () => {
+      const width = window.innerWidth < 768 ? 250 : window.innerWidth < 1024 ? 375 : 500;
+      const height = window.innerWidth < 768 ? 250 : window.innerWidth < 1024 ? 375 : 500;
+      setGlobeSize({ width, height });
+    };
 
-      // Function to handle visibility change
-      const handleVisibilityChange = () => {
-        if (document.hidden) {
-          globeEl.current?.pauseAnimation(); // Pause the globe animation when the document is hidden
-        } else {
-          globeEl.current?.resumeAnimation(); // Resume the globe animation when the document becomes visible again
-        }
-      };
+    window.addEventListener("resize", handleResize);
+    handleResize();
 
-      const handleResize = () => {
-        // Example logic for dynamic resizing
-        const width = window.innerWidth < 768 ? 250 : window.innerWidth < 1024 ? 375 : 500;
-        const height = window.innerWidth < 768 ? 250 : window.innerWidth < 1024 ? 375 : 500;
-        setGlobeSize({ width, height });
-      };
-
-      // Initial theme update and setting up an observer for class changes on the document element
-      updateTheme();
-      const observer = new MutationObserver(updateTheme);
-      observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-
-      // Adding event listener for visibility change
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-
-      handleResize();
-      window.addEventListener("resize", handleResize);
-      // Cleanup function to remove the event listener and disconnect the observer
-      return () => {
-        window.removeEventListener("resize", handleResize);
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
-        observer.disconnect();
-      };
-    }
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const handleGlobeReady = () => {
     const globe = globeEl.current;
@@ -142,7 +114,7 @@ export default function LocationGlobe() {
           ref={globeEl}
           onGlobeReady={handleGlobeReady}
           waitForGlobeReady={true}
-          animateIn={false}
+          animateIn={true}
           globeImageUrl={globeImageUrl} //"//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
           width={globeSize.width}

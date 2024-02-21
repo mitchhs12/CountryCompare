@@ -45,7 +45,7 @@ export default function Calculator() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2">
-      <div className="flex flex-col gap-y-6 md:mx-12 lg:mx-6 xl:mx-0">
+      <div className="flex flex-col gap-y-6 md:mx-12 lg:mx-12">
         <div>
           <h1 className="flex justify-center md:justify-start md:pl-2 text-4xl">{pathname}</h1>
         </div>

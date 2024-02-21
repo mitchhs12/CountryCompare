@@ -9,8 +9,6 @@ export function ThemeSwitch() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  console.log("currentResolvedTheme", resolvedTheme);
-
   useEffect(() => setMounted(true), []);
 
   const MaterialUISwitch = styled(Switch)(({ theme }) => ({
