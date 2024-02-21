@@ -26,7 +26,8 @@ export default function LocationGlobe() {
   const CLOUDS_ALT = 0.004;
   const CLOUDS_ROTATION_SPEED = -0.006; // deg/frame
 
-  const globeImageUrl = resolvedTheme === "dark" ? "./blue-marble.jpg" : "./day.jpg";
+  const darkImage = "./blue-marble.jpg";
+  const lightImage = "./day.jpg";
   const isoCode = countries[countryId as keyof typeof countries].isoCode;
 
   useEffect(() => {
@@ -115,7 +116,7 @@ export default function LocationGlobe() {
           onGlobeReady={handleGlobeReady}
           waitForGlobeReady={true}
           animateIn={true}
-          globeImageUrl={globeImageUrl} //"//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+          globeImageUrl={resolvedTheme === "dark" ? darkImage : lightImage} //"//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
           width={globeSize.width}
           height={globeSize.height}
