@@ -171,16 +171,14 @@ export async function GET(request: Request) {
   try {
     // Insert countries
     for (const countryName in countries) {
+      //@ts-ignore
       const { isoCode } = countries[countryName];
-      await db
-        .insertInto("countries")
-        .values({ name: countryName, isocode: isoCode })
-        .execute();
+      await db.insertInto("countries").values({ name: countryName, isocode: isoCode }).execute();
     }
 
     return NextResponse.json({ result: "Countries inserted successfully" }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

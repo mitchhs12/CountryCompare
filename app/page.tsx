@@ -1,8 +1,6 @@
 import { cache } from "react";
 import Grid from "@/components/Grid";
 import Hero from "@/components/Hero";
-import Country from "@/utils/mongodb/models/Country";
-import connect from "@/utils/mongodb/dbConnect";
 
 // const getCountryData = cache(async () => {
 //   await connect();

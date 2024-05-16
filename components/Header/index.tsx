@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { ThemeSwitch } from "@/components/ThemeSwitcher";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Header() {
@@ -9,8 +10,19 @@ export default function Header() {
 
   return (
     <>
-      <header className={`relative flex justify-between items-center h-[64px] px-4 z-[1000]`}>
-        <Link href="/">Logo Placeholder</Link>
+      <header className={`relative flex justify-between items-center h-[84px] px-4 z-[1000]`}>
+        <div className="flex justify-center items-center hover:text-orange-600 hover:opacity-75 hover:cursor-pointer group">
+          <Link href="/">
+            <Image
+              src={"./fox.svg"}
+              alt="Logo"
+              width={60}
+              height={60}
+              className="transition-transform duration-300 group-hover:rotate-6"
+            />
+          </Link>
+          <h1 className="flex pl-4 text-4xl text-orange-600 font-seriff bold">Nomad Stats</h1>
+        </div>
         <nav className="flex justify-evenly items-center gap-8 h-full text-[.8rem] font-semibold">
           <ThemeSwitch />
         </nav>
