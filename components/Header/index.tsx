@@ -20,8 +20,8 @@ export default function Header() {
               height={60}
               className="transition-transform duration-300 group-hover:rotate-6"
             />
+            <h1 className="flex pl-4 text-4xl text-orange-600 font-seriff bold">Nomad Stats</h1>
           </Link>
-          <h1 className="flex pl-4 text-4xl text-orange-600 font-seriff bold">Nomad Stats</h1>
         </div>
         <nav className="flex justify-evenly items-center gap-8 h-full text-[.8rem] font-semibold">
           <ThemeSwitch />
