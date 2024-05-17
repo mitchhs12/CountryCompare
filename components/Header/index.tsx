@@ -11,8 +11,8 @@ export default function Header() {
   return (
     <>
       <header className={`relative flex justify-between items-center h-[84px] px-4 z-[1000]`}>
-        <div className="flex justify-center items-center hover:text-orange-600 hover:opacity-75 hover:cursor-pointer group">
-          <Link href="/">
+        <Link href="/">
+          <div className="flex justify-center items-center hover:text-orange-600 hover:opacity-75 hover:cursor-pointer group">
             <Image
               src={"./fox.svg"}
               alt="Logo"
@@ -20,9 +20,10 @@ export default function Header() {
               height={60}
               className="transition-transform duration-300 group-hover:rotate-6"
             />
-            <h1 className="flex pl-4 text-4xl text-orange-600 font-seriff bold">Nomad Stats</h1>
-          </Link>
-        </div>
+            <h1 className="flex pl-6 text-4xl text-orange-600 font-seriff bold">Nomad Stats</h1>
+          </div>
+        </Link>
+
         <nav className="flex justify-evenly items-center gap-8 h-full text-[.8rem] font-semibold">
           <ThemeSwitch />
         </nav>

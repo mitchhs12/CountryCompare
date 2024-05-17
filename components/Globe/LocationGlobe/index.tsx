@@ -26,7 +26,7 @@ export default function LocationGlobe() {
   const CLOUDS_ALT = 0.004;
   const CLOUDS_ROTATION_SPEED = -0.006; // deg/frame
 
-  const darkImage = "./blue-marble.jpg";
+  const darkImage = "./night.jpg";
   const lightImage = "./day.jpg";
   const isoCode = countries[countryId as keyof typeof countries].isoCode;
 
@@ -47,6 +47,9 @@ export default function LocationGlobe() {
 
   const handleGlobeReady = () => {
     const globe = globeEl.current;
+
+    const darkTexture = new THREE.TextureLoader().load("./blue-marble.jpg");
+    const lightTexture = new THREE.TextureLoader().load("./day.jpg");
 
     new THREE.TextureLoader().load(CLOUDS_IMG_URL, (cloudsTexture) => {
       const clouds = new THREE.Mesh(
@@ -114,9 +117,9 @@ export default function LocationGlobe() {
         <Globe
           ref={globeEl}
           onGlobeReady={handleGlobeReady}
+          globeImageUrl={resolvedTheme === "dark" ? darkImage : lightImage}
           waitForGlobeReady={true}
           animateIn={true}
-          globeImageUrl={resolvedTheme === "dark" ? darkImage : lightImage} //"//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
           width={globeSize.width}
           height={globeSize.height}
